@@ -3,10 +3,58 @@
 import * as Curry from "bs-platform/lib/es6/curry.js";
 import * as React from "react";
 import * as Button from "./Button.bs.js";
+import * as Belt_Array from "bs-platform/lib/es6/belt_Array.js";
 
 function s(prim) {
   return prim;
 }
+
+function make(text) {
+  return {
+          id: new Date().getTime(),
+          text: text
+        };
+}
+
+function id(t) {
+  return t.id;
+}
+
+function text(t) {
+  return t.text;
+}
+
+var LogEntry = {
+  make: make,
+  id: id,
+  text: text
+};
+
+function Counter$LogItem(Props) {
+  var text = Props.text;
+  return React.createElement("p", undefined, text);
+}
+
+var LogItem = {
+  make: Counter$LogItem
+};
+
+function Counter$LogViewer(Props) {
+  var logs = Props.logs;
+  var logItems = Belt_Array.map(logs, (function (x) {
+          return React.createElement(Counter$LogItem, {
+                      text: x.text,
+                      key: String(x.id)
+                    });
+        }));
+  return React.createElement("div", {
+              className: "h-36 overflow-y-scroll border-2 bg-gray-200 text-sm py-2 px-4"
+            }, logItems);
+}
+
+var LogViewer = {
+  make: Counter$LogViewer
+};
 
 function reducer(state, action) {
   if (typeof action === "number") {
@@ -25,6 +73,10 @@ function Counter(Props) {
   var match = React.useReducer(reducer, initialValue);
   var dispatch = match[1];
   var count = match[0];
+  var match$1 = React.useState(function () {
+        return [];
+      });
+  var setHistory = match$1[1];
   var bgColor = count === 0 ? "bg-blue-200" : (
       count > 0 ? "bg-green-200" : "bg-red-200"
     );
@@ -33,36 +85,62 @@ function Counter(Props) {
             }, React.createElement("p", {
                   className: "py-4 mb-8 text-center text-4xl " + bgColor
                 }, "The count is " + String(count)), React.createElement("div", {
-                  className: "flex justify-center"
+                  className: "flex justify-center mb-16"
                 }, React.createElement(Button.make, {
                       text: "Increment",
                       className: "border py-2 px-4 bg-gray-200 hover:bg-blue-200 mr-2",
                       handleClick: (function (_mouseEvt) {
-                          return Curry._1(dispatch, /* Increment */0);
+                          Curry._1(dispatch, /* Increment */0);
+                          return Curry._1(setHistory, (function (xs) {
+                                        var text = "Increment " + String(count);
+                                        return [{
+                                                    id: new Date().getTime(),
+                                                    text: text
+                                                  }].concat(xs);
+                                      }));
                         })
                     }), React.createElement(Button.make, {
                       text: "Decrement",
                       className: "border py-2 px-4 bg-gray-200 hover:bg-blue-200 mr-2",
                       handleClick: (function (_mouseEvt) {
-                          return Curry._1(dispatch, /* Decrement */1);
+                          Curry._1(dispatch, /* Decrement */1);
+                          return Curry._1(setHistory, (function (xs) {
+                                        var text = "Decrement " + String(count);
+                                        return [{
+                                                    id: new Date().getTime(),
+                                                    text: text
+                                                  }].concat(xs);
+                                      }));
                         })
                     }), React.createElement(Button.make, {
                       text: "Reset",
                       className: "border py-2 px-4 bg-gray-200 hover:bg-blue-200 mr-2",
                       handleClick: (function (_mouseEvt) {
-                          return Curry._1(dispatch, /* Reset */{
-                                      _0: initialValue
-                                    });
+                          Curry._1(dispatch, /* Reset */{
+                                _0: initialValue
+                              });
+                          return Curry._1(setHistory, (function (xs) {
+                                        var text = "Reset " + String(count);
+                                        return [{
+                                                    id: new Date().getTime(),
+                                                    text: text
+                                                  }].concat(xs);
+                                      }));
                         })
-                    })));
+                    })), React.createElement(Counter$LogViewer, {
+                  logs: match$1[0]
+                }));
 }
 
-var make = Counter;
+var make$1 = Counter;
 
 export {
   s ,
+  LogEntry ,
+  LogItem ,
+  LogViewer ,
   reducer ,
-  make ,
+  make$1 as make,
   
 }
 /* react Not a pure module */
