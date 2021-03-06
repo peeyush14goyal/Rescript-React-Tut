@@ -51,10 +51,35 @@ let reducer = (state, action) =>
     | Reset(initialValue) => initialValue
   }
 
+@val external document: {..} = "document"
+
 @react.component
 let make = (~initialValue) => {
   let (count, dispatch) = React.useReducer(reducer, initialValue)
   let (history, setHistory) = React.useState((): array<LogEntry.t> => [])
+
+  // Runs only once at time of mounting
+  React.useEffect0(() => {
+    Js.log("Counter component mounted")
+
+    // Some(() => Js.log("Counter component unmounted"))
+    None
+  })
+
+  React.useEffect(() => {
+    let title = `Count is ${count->Belt.Int.toString}`
+    document["title"] = title
+
+    // Some(() => document["title"] = "Timers")
+    None
+  })
+
+  React.useEffect1(() => {
+    dispatch(Reset(initialValue))
+    setHistory(xs => Js.Array2.concat([`Reset initialvalue to ${initialValue->Belt.Int.toString}`->LogEntry.make], xs))
+    None
+  }, [initialValue])
+
 
   let bgColor = if count == 0 {
     "bg-blue-200"
@@ -64,7 +89,7 @@ let make = (~initialValue) => {
     "bg-red-200"
   }
 
-  <div className="max-w-3xl mx-auto mt-24">
+  <div className="max-w-3xl mx-auto">
     <p className={`py-4 mb-8 text-center text-4xl ${bgColor}`}>
       {s("The count is " ++ count->Belt.Int.toString)}
     </p>

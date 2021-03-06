@@ -77,11 +77,33 @@ function Counter(Props) {
         return [];
       });
   var setHistory = match$1[1];
+  React.useEffect((function () {
+          console.log("Counter component mounted");
+          
+        }), []);
+  React.useEffect(function () {
+        var title = "Count is " + String(count);
+        document.title = title;
+        
+      });
+  React.useEffect((function () {
+          Curry._1(dispatch, /* Reset */{
+                _0: initialValue
+              });
+          Curry._1(setHistory, (function (xs) {
+                  var text = "Reset initialvalue to " + String(initialValue);
+                  return [{
+                              id: new Date().getTime(),
+                              text: text
+                            }].concat(xs);
+                }));
+          
+        }), [initialValue]);
   var bgColor = count === 0 ? "bg-blue-200" : (
       count > 0 ? "bg-green-200" : "bg-red-200"
     );
   return React.createElement("div", {
-              className: "max-w-3xl mx-auto mt-24"
+              className: "max-w-3xl mx-auto"
             }, React.createElement("p", {
                   className: "py-4 mb-8 text-center text-4xl " + bgColor
                 }, "The count is " + String(count)), React.createElement("div", {
