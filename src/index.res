@@ -1,6 +1,13 @@
 
 let s = React.string
 
+module Button = {
+  @react.component
+  let make = (~text, ~className, ~handleClick) => {
+    <button className onClick=handleClick> {s(text)} </button>
+  }
+}
+
 module Counter = {
   @react.component
   let make = (~initialValue) => {
@@ -19,21 +26,18 @@ module Counter = {
         {s("The count is " ++ count->Belt.Int.toString)}
       </p>
       <div className="flex justify-center">
-        <button
-          onClick={_mouseEvt => setCount(x => x + 1)}
-          className="border py-2 px-4 bg-gray-200 hover:bg-blue-200 mr-2">
-          {s("Increment")}
-        </button>
-        <button
-          onClick={_mouseEvt => setCount(x => x - 1)}
-          className="border py-2 px-4 bg-gray-200 hover:bg-blue-200 mr-2">
-          {s("Decrement")}
-        </button>
-        <button
-          onClick={_mouseEvt => setCount(_x => initialValue)}
-          className="border py-2 px-4 bg-gray-200 hover:bg-blue-200 mr-2">
-          {s("Reset")}
-        </button>
+        <Button text="Increment"
+          className="border py-2 px-4 bg-gray-200 hover:bg-blue-200 mr-2"
+          handleClick={_mouseEvt => setCount(x => x + 1)}
+          />
+          <Button text="Decrement"
+          className="border py-2 px-4 bg-gray-200 hover:bg-blue-200 mr-2"
+          handleClick={_mouseEvt => setCount(x => x - 1)}
+          />
+          <Button text="Reset"
+          className="border py-2 px-4 bg-gray-200 hover:bg-blue-200 mr-2"
+          handleClick={_mouseEvt => setCount(_x => 0)}
+          />
       </div>
     </div>
   }

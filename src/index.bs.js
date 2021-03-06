@@ -8,6 +8,20 @@ function s(prim) {
   return prim;
 }
 
+function Index$Button(Props) {
+  var text = Props.text;
+  var className = Props.className;
+  var handleClick = Props.handleClick;
+  return React.createElement("button", {
+              className: className,
+              onClick: handleClick
+            }, text);
+}
+
+var Button = {
+  make: Index$Button
+};
+
 function Index$Counter(Props) {
   var initialValue = Props.initialValue;
   var match = React.useState(function () {
@@ -24,28 +38,31 @@ function Index$Counter(Props) {
                   className: "py-4 mb-8 text-center text-4xl " + bgColor
                 }, "The count is " + String(count)), React.createElement("div", {
                   className: "flex justify-center"
-                }, React.createElement("button", {
+                }, React.createElement(Index$Button, {
+                      text: "Increment",
                       className: "border py-2 px-4 bg-gray-200 hover:bg-blue-200 mr-2",
-                      onClick: (function (_mouseEvt) {
+                      handleClick: (function (_mouseEvt) {
                           return Curry._1(setCount, (function (x) {
                                         return x + 1 | 0;
                                       }));
                         })
-                    }, "Increment"), React.createElement("button", {
+                    }), React.createElement(Index$Button, {
+                      text: "Decrement",
                       className: "border py-2 px-4 bg-gray-200 hover:bg-blue-200 mr-2",
-                      onClick: (function (_mouseEvt) {
+                      handleClick: (function (_mouseEvt) {
                           return Curry._1(setCount, (function (x) {
                                         return x - 1 | 0;
                                       }));
                         })
-                    }, "Decrement"), React.createElement("button", {
+                    }), React.createElement(Index$Button, {
+                      text: "Reset",
                       className: "border py-2 px-4 bg-gray-200 hover:bg-blue-200 mr-2",
-                      onClick: (function (_mouseEvt) {
+                      handleClick: (function (_mouseEvt) {
                           return Curry._1(setCount, (function (_x) {
-                                        return initialValue;
+                                        return 0;
                                       }));
                         })
-                    }, "Reset")));
+                    })));
 }
 
 var Counter = {
@@ -64,6 +81,7 @@ if (root == null) {
 
 export {
   s ,
+  Button ,
   Counter ,
   
 }
